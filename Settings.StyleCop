@@ -1,0 +1,9 @@
+<StyleCopSettings Version="105">
+  <GlobalSettings>
+    <CollectionProperty Name="RecognizedWords">
+      <Value>gtid</Value>
+      <Value>tpf</Value>
+      <Value>Traveldata</Value>
+    </CollectionProperty>
+  </GlobalSettings>
+</StyleCopSettings>

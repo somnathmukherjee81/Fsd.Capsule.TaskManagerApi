@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: task-manager-api
+data:
+ HTTP_PORT: "8080"
+ HTTPS_PORT: "8081"
+ CERT_PATH: "/etc/secret-volume/fsd_capsule_taskmanager.pfx"                                                                                                                                                                              
+ APP_INSIGHTS_KEY: ""
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: task-manager-api
+  annotations:
+    ingress.kubernetes.io/secure-backends: "true"
+    kubernetes.io/ingress.class: ingress-fsd-capsule-prod
+spec:
+  tls:
+  - hosts: 
+    - task-manager-api.fsd-capsule-prod.com
+  rules:
+  - host: task-manager-api.fsd-capsule-prod.com
+    http:
+      paths:
+      - backend:
+          serviceName: task-manager-api
+          servicePort: 443 

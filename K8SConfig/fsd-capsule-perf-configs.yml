@@ -5,7 +5,10 @@ metadata:
 data:
  HTTP_PORT: "8080"
  HTTPS_PORT: "8081"
- CERT_PATH: "/etc/secret-volume/fsd_capsule_taskmanager.pfx"                                                                                                                                                                              
+ CERT_PATH: "/etc/secret-volume/fsd_capsule_taskmanager.pfx"
+ DB_TYPE: "SQLSERVER"
+ DB_CONNECTION_STRING: "Server=(localdb)\\mssqllocaldb;Database=TasksDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+ DB_NAME: "TasksDb"
  APP_INSIGHTS_KEY: ""
 ---
 apiVersion: extensions/v1beta1

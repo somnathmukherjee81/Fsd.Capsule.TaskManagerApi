@@ -15,7 +15,7 @@ namespace Fsd.Capsule.TaskManagerApi.Helpers
     using Exception;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Model;
+    using Models;
     using Newtonsoft.Json;
 
     /// <summary>

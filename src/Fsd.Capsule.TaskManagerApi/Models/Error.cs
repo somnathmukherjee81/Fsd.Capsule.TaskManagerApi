@@ -3,11 +3,11 @@
 //   Copyright (c) Somnath Mukherjee. All rights reserved.
 // </copyright>
 // <summary>
-//  Error Object for the Channel Service
+//  Error Object for the service
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Fsd.Capsule.TaskManagerApi.Model
+namespace Fsd.Capsule.TaskManagerApi.Models
 {
     using Newtonsoft.Json;
 

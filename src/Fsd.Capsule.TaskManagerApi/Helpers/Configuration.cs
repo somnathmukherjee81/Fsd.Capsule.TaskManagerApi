@@ -32,6 +32,26 @@ namespace Fsd.Capsule.TaskManagerApi.Helpers
         public static string CertPath => GetValue("CERT_PATH", "__fsd_capsule_taskmanager.pfx");
 
         /// <summary>
+        /// Gets the DbType
+        /// Database Type.
+        /// </summary>
+        public static string DbType => GetValue("DB_TYPE", "LOCALDB");
+
+        /// <summary>
+        /// Gets the DbConnectionString
+        /// Database Connection String.
+        /// </summary>
+        public static string DbConnectionString => GetValue(
+            "DB_CONNECTION_STRING", 
+            "Server=(localdb)\\mssqllocaldb;Database=TasksDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+
+        /// <summary>
+        /// Gets the DatabaseName
+        /// Database Name.
+        /// </summary>
+        public static string DatabaseName => GetValue("DB_NAME", "TasksDb");
+
+        /// <summary>
         /// Gets the AppInsightsKey
         /// App Insights Key.
         /// </summary>

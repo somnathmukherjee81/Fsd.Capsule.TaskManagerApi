@@ -9,12 +9,19 @@
 
 namespace Fsd.Capsule.TaskManagerApi
 {
-    using Helpers;
-    using Microsoft.AspNetCore;
-    using Microsoft.AspNetCore.Hosting;
     using System;
     using System.IO;
     using System.Net;
+
+    using Fsd.Capsule.TaskManagerApi.Data;
+    using Fsd.Capsule.TaskManagerApi.Models;
+
+    using Helpers;
+
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Start of the application
@@ -27,7 +34,24 @@ namespace Fsd.Capsule.TaskManagerApi
         /// <param name="args">Argument list.</param>
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<TaskContext>();
+                    DbInitializer.Initialize(context);
+                }
+                catch (System.Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding the database.");
+                }
+            }
+
+            host.Run();
         }
 
         /// <summary>

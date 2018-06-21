@@ -9,11 +9,15 @@
 
 namespace Fsd.Capsule.TaskManagerApi
 {
+    using System;
     using System.IO;
+
+    using Fsd.Capsule.TaskManagerApi.Models;    
     using Initializers;
     using Microsoft.ApplicationInsights.Extensibility;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -24,6 +28,8 @@ namespace Fsd.Capsule.TaskManagerApi
     using Newtonsoft.Json;
 
     using Swashbuckle.AspNetCore.Swagger;
+
+    using ConfigurationHelper = Helpers.Configuration;
 
     /// <summary>
     /// The Startup class of the service
@@ -86,6 +92,21 @@ namespace Fsd.Capsule.TaskManagerApi
         private const string XmlCommentsFile = "Fsd.Capsule.TaskManagerApi.xml";
 
         /// <summary>
+        /// The database type in memory
+        /// </summary>
+        private const string DbTypeInMemory = "INMEMORY";
+
+        /// <summary>
+        /// The database type Local Db
+        /// </summary>
+        private const string DbTypeLocalDb = "LOCALDB";
+
+        /// <summary>
+        /// The database type SQL server
+        /// </summary>
+        private const string DbTypeSqlServer = "SQLSERVER";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Startup" /> class.
         /// </summary>
         /// <param name="configuration">Configuration values.</param>
@@ -135,6 +156,9 @@ namespace Fsd.Capsule.TaskManagerApi
                     service.IncludeXmlComments(xmlPath);
                 }
             });
+
+            // Register the database context
+            RegisterDatabaseContext(services);
 
             // Add framework services.
             services.AddMvc(setupAction =>
@@ -199,6 +223,25 @@ namespace Fsd.Capsule.TaskManagerApi
             });
 
             app.UseMvc();
+        }
+
+        /// <summary>
+        /// Registers the database context.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        private static void RegisterDatabaseContext(IServiceCollection services)
+        {
+            string databaseType = ConfigurationHelper.DbType;
+            switch (databaseType?.ToUpper())
+            {
+                case DbTypeInMemory:
+                    services.AddDbContext<TaskContext>(options => options.UseInMemoryDatabase(ConfigurationHelper.DatabaseName));
+                    break;
+                case DbTypeLocalDb:
+                case DbTypeSqlServer:
+                    services.AddDbContext<TaskContext>(options => options.UseSqlServer(ConfigurationHelper.DbConnectionString));
+                    break;
+            }
         }
     }
 }

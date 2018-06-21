@@ -9,10 +9,13 @@
 
 namespace Fsd.Capsule.TaskManagerApi.Controllers
 {
-    using System;
     using System.Collections.Generic;
+    using System.Linq;
+
     using Exception;
     using Fsd.Capsule.TaskManagerApi.Helpers;
+    using Fsd.Capsule.TaskManagerApi.Models;
+
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -20,6 +23,7 @@ namespace Fsd.Capsule.TaskManagerApi.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("/[controller]")]
+    [ApiController]
     public class TasksController : Controller
     {
         /// <summary>
@@ -28,36 +32,32 @@ namespace Fsd.Capsule.TaskManagerApi.Controllers
         private const string ModelStateError = "Unable to create model. Please see error details for more information";
 
         /// <summary>
+        /// The task database context
+        /// </summary>
+        private readonly TaskContext _context;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TasksController"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        public TasksController(TaskContext context)
+        {
+            _context = context;
+        }
+
+        /// <summary>
         /// The GET method for retrieving all tasks
         /// </summary>
         /// <returns>
         /// The json serialized list of task.
         /// </returns>
         /// <remarks>GET: /Tasks</remarks>
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet(Name = "GetAllTasks")]
+        public ActionResult<IList<Task>> Get()
         {
-            IActionResult result;
+            var headerInformation = new HeaderInformation(Request.Headers);
 
-            if (!ModelState.IsValid)
-            {
-                throw new ApiException(ModelStateError, 500, ModelState);
-            }
-
-            try
-            {
-                var headerInformation = new HeaderInformation(Request.Headers);
-
-                var tasksList = new List<string>() { "Task 1", "Task 2" };
-
-                result = Ok(tasksList);
-            }
-            catch (ArgumentException argumentException)
-            {
-                result = BadRequest(argumentException.Message);
-            }
-
-            return result;
+            return _context.Tasks.ToList();
         }
 
         /// <summary>
@@ -67,46 +67,100 @@ namespace Fsd.Capsule.TaskManagerApi.Controllers
         /// <returns>
         /// The json serialized task.
         /// </returns>
-        /// <remarks>GET: /Task/5</remarks>
-        [HttpGet("{id}", Name = "Get")]
-        public IActionResult Get(int id)
+        /// <remarks>GET: /Tasks/5</remarks>
+        [HttpGet("{id}", Name = "GetTaskById")]
+        public ActionResult<Task> Get(int id)
         {
-            IActionResult result;
+            var headerInformation = new HeaderInformation(Request.Headers);
 
-            result = Ok("value");
+            var item = _context.Tasks.Find(id);
 
-            return result;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
         }
 
         /// <summary>
         /// The POST method for creating a tasks
         /// </summary>
-        /// <param name="value">Task payload</param>
-        /// <remarks>POST: /Task</remarks>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        /// <param name="task">Task payload</param>
+        /// <returns>The <see cref="Task"/> object created</returns>
+        /// <remarks>POST: /Tasks</remarks>
+        [HttpPost(Name = "CreateTask")]
+        public IActionResult Post([FromBody]Task task)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ApiException(ModelStateError, 500, ModelState);
+            }
+
+            var headerInformation = new HeaderInformation(Request.Headers);
+
+            _context.Tasks.Add(task);
+            _context.SaveChanges();
+
+            IActionResult result = CreatedAtRoute("GetTaskById", new { id = task.TaskID }, task);
+
+            return result;
         }
 
         /// <summary>
         /// The POST method for updating a tasks
         /// </summary>
         /// <param name="id">Id of the Task</param>
-        /// <param name="value">Task payload</param>
-        /// <remarks>PUT: /Task/5</remarks>
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        /// <param name="task">Task payload</param>
+        /// <returns>The updated <see cref="Task"/> object</returns>
+        /// <remarks>PUT: /Tasks/5</remarks>
+        [HttpPut("{id}", Name = "UpdateTask")]
+        public IActionResult Put(int id, [FromBody]Task task)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ApiException(ModelStateError, 500, ModelState);
+            }
+
+            var headerInformation = new HeaderInformation(Request.Headers);
+
+            var taskToUpdate = _context.Tasks.Find(id);
+            if (taskToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            taskToUpdate.UpdateWith(task);
+
+            _context.Tasks.Update(taskToUpdate);
+            _context.SaveChanges();
+
+            IActionResult result = CreatedAtRoute("GetTaskById", new { id = taskToUpdate.TaskID }, task);
+
+            return result;
         }
 
         /// <summary>
         /// The POST method for deleting a tasks
         /// </summary>
         /// <param name="id">Id of the Task</param>
+        /// <returns>No Content</returns>
         /// <remarks>DELETE: /Task/5</remarks>
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id}", Name = "DeleteTask")]
+        public IActionResult Delete(int id)
         {
+            var headerInformation = new HeaderInformation(Request.Headers);
+
+            var todo = _context.Tasks.Find(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            _context.Tasks.Remove(todo);
+            _context.SaveChanges();
+
+            return NoContent();
         }
     }
 }

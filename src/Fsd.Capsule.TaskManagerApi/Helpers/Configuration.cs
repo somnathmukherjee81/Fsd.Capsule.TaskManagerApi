@@ -17,13 +17,13 @@ namespace Fsd.Capsule.TaskManagerApi.Helpers
         /// Gets the HttpPort
         /// The http port.
         /// </summary>
-        public static int HttpPort => int.Parse(GetValue("HTTP_PORT", "8080"));
+        public static int HttpPort => int.Parse(GetValue("HTTP_PORT", "9090"));
 
         /// <summary>
         /// Gets the HttpsPort
         /// The https port.
         /// </summary>
-        public static int HttpsPort => int.Parse(GetValue("HTTPS_PORT", "8081"));
+        public static int HttpsPort => int.Parse(GetValue("HTTPS_PORT", "9091"));
 
         /// <summary>
         /// Gets the CertPath

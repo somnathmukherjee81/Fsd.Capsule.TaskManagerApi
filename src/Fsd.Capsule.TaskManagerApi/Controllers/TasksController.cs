@@ -151,13 +151,13 @@ namespace Fsd.Capsule.TaskManagerApi.Controllers
         {
             var headerInformation = new HeaderInformation(Request.Headers);
 
-            var todo = _context.Tasks.Find(id);
-            if (todo == null)
+            var taskToDelete = _context.Tasks.Find(id);
+            if (taskToDelete == null)
             {
                 return NotFound();
             }
 
-            _context.Tasks.Remove(todo);
+            _context.Tasks.Remove(taskToDelete);
             _context.SaveChanges();
 
             return NoContent();

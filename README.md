@@ -123,3 +123,6 @@ DELETE https://task-manager-api.fsd-capsule-dev.com/Tasks/{id}
     "status": 0
 }
 ```
+
+## Sequence Diagram
+[![Sequence Diagram of Task manager Api](./design/MiddleTierDesign.png)](./design/MiddleTierDesign.png)

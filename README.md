@@ -15,19 +15,20 @@ List of technologies used in this service are:
 
  - .Net Core
  - ASP.Net Core
+ - Entity Framework
  - XUnit
  - NuGet
 
 ## How to use
 
 ### Restore the nuget dpendencies
-At the root of teh project run
+At the root of the project run
 ```
 dotnet restore
 ```
 
 ### Build the code base
-At the root of teh project run
+At the root of the project run
 ```
 dotnet build
 ```

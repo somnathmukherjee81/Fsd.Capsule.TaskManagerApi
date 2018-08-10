@@ -26,9 +26,16 @@ namespace Fsd.Capsule.TaskManagerApi.Models
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TaskContext"/> class. This is for unit testing
+        /// </summary>
+        public TaskContext()
+        {
+        }
+
+        /// <summary>
         /// Gets or sets the tasks.
         /// </summary>
-        public DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<Task> Tasks { get; set; }
 
         /// <summary>
         /// Override this method to further configure the model that was discovered by convention from the entity types

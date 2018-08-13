@@ -33,7 +33,16 @@ At the root of the project run
 dotnet build
 ```
 
+### Run tests
+
+At the root of the project run
+
+```
+dotnet test
+```
+
 ### Start the service
+
 From the build output location (Debug or Release folder), run
 ```
 dotnet Fsd.Capsule.TaskManagerApi.dll

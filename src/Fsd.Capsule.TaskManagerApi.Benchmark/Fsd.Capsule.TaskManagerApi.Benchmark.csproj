@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <ProjectGuid>E9C65B75-41B8-4CFE-8C5A-F862423670C7</ProjectGuid>
+    <ProjectGuid>438323fd-c0bb-4d26-aacd-b49d3ed95e02</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fsd.Capsule.TaskManagerApi.Test\Fsd.Capsule.TaskManagerApi.Test.csproj" />
     <ProjectReference Include="..\Fsd.Capsule.TaskManagerApi\Fsd.Capsule.TaskManagerApi.csproj" />
   </ItemGroup>
 </Project>
